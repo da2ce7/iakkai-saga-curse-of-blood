@@ -1,0 +1,83 @@
+name: Manage updated assets
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+env:
+  MAX_SIZE: 2048
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Test changed-files
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+          lfs: 'true'
+      - name: Get changed files
+        id: changed-files
+        with:
+          files: raw
+          separator: ","
+        uses: tj-actions/changed-files@v5.2  
+      - uses: mfinelli/setup-imagemagick@v1        
+      - name: Process all modified files
+        run: |
+          max_size=${{env.MAX_SIZE}}
+          modified_files_string="${{ steps.changed-files.outputs.all_modified_files }}";
+          files_array=$(echo $modified_files_string | tr "," "\n")
+          for file in $files_array 
+          do
+              file_dir=$(dirname $file)
+              if [[ $file_dir == raw/extra* ]]; then
+                  echo "  Ignoring asset in 'extra' folder"
+              else          
+                  width=$(magick identify -ping -format '%w' $file[0])
+                  height=$(magick identify -ping -format '%w' $file[0])                                
+                  name_ext=$(basename $file)
+                  name=$(echo "$name_ext" | cut -f 1 -d '.') 
+                  ext="${name_ext##*.}"
+                  echo "- $file ($width x $height), type $ext was modified"
+                  if [[ $(echo "$file" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
+                      echo "  Destination format is PNG"
+                      new_ext=".png"
+                  else
+                      echo "  Destination format is JPEG"
+                      new_ext=".jpg"
+                  fi
+                  output_file="${file_dir/raw/src/assets}/$name$new_ext"               
+                  mkdir -p ${file_dir/raw/src/assets}
+                  if (( width > max_size || height > max_size )); then
+                      echo "  Must be processed as is bigger than $max_size"
+                      echo "  Converting to $output_file"
+                      geometry="${max_size}x${max_size}"
+                      magick convert $file[0] -resize $geometry $output_file
+                  else              
+                      if [[ $(echo ".$ext" |  tr '[:lower:]' '[:upper:]' ) != $(echo "$new_ext" |  tr '[:lower:]' '[:upper:]' ) ]]; then
+                          echo "  Converting file format from $ext to $new_ext"
+                          magick convert $file[0] $output_file
+                      else
+                          echo "  Copying file to destination"
+                          cp $file $output_file
+                      fi                  
+                  fi
+              fi  
+          done
+      - name: Archive generated images
+        uses: actions/upload-artifact@v2
+        with:
+          name: assets
+          path: src/assets
+      - name: Update resources
+        uses: test-room-7/action-update-file@v1
+        with:
+            file-path: |
+               src/assets/**/*.jpg
+               src/assets/**/*.png
+            commit-msg: Update processed assets
+            github-token: ${{ secrets.GITHUB_TOKEN }}
