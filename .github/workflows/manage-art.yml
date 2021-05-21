@@ -45,7 +45,8 @@ jobs:
                   if [[ $(echo "$copyright" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
                       isSprite=true
                   else
-                      isSprite=false                  
+                      isSprite=false      
+                  fi
                   name_ext=$(basename $file)
                   name=$(echo "$name_ext" | cut -f 1 -d '.') 
                   ext="${name_ext##*.}"                  
