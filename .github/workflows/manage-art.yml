@@ -34,20 +34,26 @@ jobs:
           for file in $files_array 
           do
               file_dir=$(dirname $file)
+              width=$(magick identify -ping -format '%w' $file[0])
+              height=$(magick identify -ping -format '%w' $file[0])
+              echo "- $file ($width x $height):"              
               if [[ $file_dir == raw/extra* ]]; then
                   echo "  Ignoring asset in 'extra' folder"
               else          
-                  width=$(magick identify -ping -format '%w' $file[0])
-                  height=$(magick identify -ping -format '%w' $file[0])                                
+                  keywords=$(magick identify -format [IPTC:2:25] $file[0])
+                  copyright=$(magick identify -format %[EXIF:COPYRIGHT*] $file[0])
+                  if [[ $(echo "$copyright" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
+                      isSprite=true
+                  else
+                      isSprite=false                  
                   name_ext=$(basename $file)
                   name=$(echo "$name_ext" | cut -f 1 -d '.') 
-                  ext="${name_ext##*.}"
-                  echo "- $file ($width x $height), type $ext was modified"
-                  if [[ $(echo "$file" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
-                      echo "  Destination format is PNG"
+                  ext="${name_ext##*.}"                  
+                  if [ isSprite = true ] ; then
+                      echo "  Sprite keyword detected: destination format is PNG"
                       new_ext=".png"
                   else
-                      echo "  Destination format is JPEG"
+                      echo "  Sprite keyword not detected: destination format is JPEG"
                       new_ext=".jpg"
                   fi
                   output_file="${file_dir/raw/src/assets}/$name$new_ext"               
