@@ -38,20 +38,20 @@ jobs:
               height=$(magick identify -ping -format '%w' $file[0])
               echo -e "- \e[97m$file\e[0m ($width x $height):"              
               if [[ $file_dir == raw/extra* ]]; then
-                  echo "  Ignoring asset in 'extra' folder"
+                  echo -e "  \e[3mIgnoring asset in 'extra' folder\e[0m"
               else          
                   keywords=$(magick identify -quiet -format %[IPTC:2:25] $file[0])
                   copyright=$(magick identify -quiet -format %[EXIF:COPYRIGHT*] $file[0])
                   author=$(magick identify -quiet -format %[IPTC:2:80] $file[0])
                   if [ -z "$author" ]; then                                            
-                      echo "  \e[33mWarning: no author information found\e[0m"
+                      echo -e "  \e[33mWarning: no author information found\e[0m"
                   else
-                      echo "  Author: \e[36m$author\e[0m"
+                      echo -e "  Author: \e[36m$author\e[0m"
                   fi
                   if [ -z "$copyright" ]; then                      
-                      echo "  \e[33mWarning: no copyright information found\e[0m"
+                      echo -e "  \e[33mWarning: no copyright information found\e[0m"
                   else
-                      echo "  Image copyright information: \e[36m$copyright\e[0m"
+                      echo -e "  Image copyright information: \e[36m$copyright\e[0m"
                   fi                                    
                   if [[ $(echo "$keywords" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
                       isSprite=true
