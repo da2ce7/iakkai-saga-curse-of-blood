@@ -42,7 +42,7 @@ jobs:
               else          
                   keywords=$(magick identify -format [IPTC:2:25] $file[0])
                   copyright=$(magick identify -format %[EXIF:COPYRIGHT*] $file[0])
-                  if [[ $(echo "$copyright" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
+                  if [[ $(echo "$keywords" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
                       isSprite=true
                   else
                       isSprite=false      
