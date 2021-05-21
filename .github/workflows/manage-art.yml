@@ -40,7 +40,7 @@ jobs:
               if [[ $file_dir == raw/extra* ]]; then
                   echo "  Ignoring asset in 'extra' folder"
               else          
-                  keywords=$(magick identify -format [IPTC:2:25] $file[0])
+                  keywords=$(magick identify -format %[IPTC:2:25] $file[0])
                   copyright=$(magick identify -format %[EXIF:COPYRIGHT*] $file[0])
                   echo ">>>>> $keywords"
                   if [[ $(echo "$keywords" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
