@@ -43,15 +43,15 @@ jobs:
                   keywords=$(magick identify -quiet -format %[IPTC:2:25] $file[0])
                   copyright=$(magick identify -quiet -format %[EXIF:COPYRIGHT*] $file[0])
                   author=$(magick identify -quiet -format %[IPTC:2:80] $file[0])
-                  if [ -z "$author" ]; then                      
-                      echo "  Author: $author"
-                  else
+                  if [ -z "$author" ]; then                                            
                       echo "  Warning: no author information found"
+                  else
+                      echo "  Author: $author"
                   fi
                   if [ -z "$copyright" ]; then                      
-                      echo "  Image copyright information: $copyright"
-                  else
                       echo "  Warning: no copyright information found"
+                  else
+                      echo "  Image copyright information: $copyright"                      
                   fi                                    
                   if [[ $(echo "$keywords" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
                       isSprite=true
