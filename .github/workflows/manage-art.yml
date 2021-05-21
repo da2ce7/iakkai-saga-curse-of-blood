@@ -13,7 +13,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Test changed-files
+    name: Process changed files
     steps:
       - uses: actions/checkout@v2
         with:
@@ -36,7 +36,7 @@ jobs:
               file_dir=$(dirname $file)
               width=$(magick identify -ping -format '%w' $file[0])
               height=$(magick identify -ping -format '%w' $file[0])
-              echo "- \e[97m$file\e[0m ($width x $height):"              
+              echo -e "- \e[97m$file\e[0m ($width x $height):"              
               if [[ $file_dir == raw/extra* ]]; then
                   echo "  Ignoring asset in 'extra' folder"
               else          
