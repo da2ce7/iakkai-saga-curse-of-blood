@@ -42,7 +42,6 @@ jobs:
               else          
                   keywords=$(magick identify -format %[IPTC:2:25] $file[0])
                   copyright=$(magick identify -format %[EXIF:COPYRIGHT*] $file[0])
-                  echo ">>>>> $keywords"
                   if [[ $(echo "$keywords" |  tr '[:lower:]' '[:upper:]' ) == *"SPRITE"* ]]; then
                       isSprite=true
                   else
@@ -51,7 +50,7 @@ jobs:
                   name_ext=$(basename $file)
                   name=$(echo "$name_ext" | cut -f 1 -d '.') 
                   ext="${name_ext##*.}"                  
-                  if [ isSprite = true ] ; then
+                  if [ "$isSprite" = true ] ; then
                       echo "  Sprite keyword detected: destination format is PNG"
                       new_ext=".png"
                   else
