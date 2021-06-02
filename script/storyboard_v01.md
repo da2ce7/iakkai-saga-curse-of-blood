@@ -1,4 +1,3 @@
-Markdown
 # Scene: SC001
 ## Title: Cover  &nbsp;
  Background: All Black  
@@ -598,7 +597,8 @@ Title: *The Revelation*
 Sprite: Werewolf from front        <br>
 Words your grandmother taught you to recite when you had nightmares and were afraid, and which now you come to realize their origin.          
  __Lord Moon I honor thee with my life and will, so give me strength of heart and flesh.  Shine your light on me, make me see and bring peace to me.__          
-- Option:  [Lure him to the trap](#SC077) [Talk to him](#)      
+- Option:  [Lure him to the trap](#SC080)        
+- Option:  [Talk to him](#SC088)        
 # Scene: SC077
 ## Title: The Trap  &nbsp;
  Background: Inside the dark cave  
@@ -710,3 +710,4 @@ When it stops you open your eyes and look at your hands and body unaware of the 
 Title: *The Revelation*  
 Sprite: Star front view from torso upwards          
 You look at the pool lit up by the moon and see your reflection. that of a huge werewolf with a white streak on the forehead.  Behind you, the werewolf says to himself.  It cannot be. The legend has come true.  Here is Star.          
+![image](https://user-images.githubusercontent.com/15330600/120469818-c3a9d800-c39a-11eb-87ed-9b96726e6ae6.png)
